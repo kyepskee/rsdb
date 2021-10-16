@@ -8,21 +8,8 @@ use nom::{
     IResult,
 };
 
+use crate::sexp::{Expr, Atom};
 use crate::parser::string;
-
-#[derive(Debug, Clone)]
-pub enum Atom {
-    Num(i64),
-    Str(String),
-    Bool(bool),
-    Sym(String),
-}
-
-#[derive(Debug, Clone)]
-pub enum Expr {
-    List(Box<Vec<Expr>>),
-    Atom(Atom),
-}
 
 fn parse_bool<'a>(input: &'a str) -> IResult<&'a str, Atom> {
     alt((
@@ -60,7 +47,7 @@ pub fn parse_num<'a>(input: &'a str) -> IResult<&'a str, Atom> {
     )(input)
 }
 
-fn parse_atom<'a>(input: &'a str) -> IResult<&'a str, Atom> {
+pub fn parse_atom<'a>(input: &'a str) -> IResult<&'a str, Atom> {
     alt((
         parse_bool,
         map(string::parse_string, Atom::Str),
