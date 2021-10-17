@@ -9,12 +9,10 @@ use std::sync::Arc;
 
 use std::thread;
 
-mod parser;
-use parser::pp;
+use sexplib::parser::{self, pp};
+use sexplib::sexp::{self, Expr, Atom};
 mod db;
 use db::Database;
-mod sexp;
-use sexp::{Expr, Atom};
 
 fn read_expr(stream: &mut TcpStream, v: &mut Vec<char>) -> sexp::Expr {
     let mut buf = [0u8; 256];
@@ -79,8 +77,8 @@ fn listen(db: Arc<Database>) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    use rsdb::expr;
-    println!("{:?}", expr!(("dsadsa" (false) 2)));
+    use expr::expr;
+    println!("{:?}", expr!(("dsadsa" (false-2) 2)));
     
     let db = Database::new();
     
