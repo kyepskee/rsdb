@@ -8,7 +8,7 @@ use std::net::{IpAddr, TcpListener, TcpStream};
 
 use crate::io::read_expr;
 
-struct Interface {
+pub struct Interface {
     port: u16,
     stream: TcpStream,
     buf: Vec<char>,
@@ -25,13 +25,17 @@ impl Interface {
             buf: vec![],
         })
     }
-
-    fn query_expr(&mut self, q: &Expr) -> Expr {
-        q.to_string();
+    
+    fn read_expr(&mut self) -> Expr {
         read_expr(&mut self.stream, &mut self.buf)
     }
-
-    fn get(&mut self, addr: String) {
-        self.stream.write(addr.as_bytes());
+    
+    pub fn set(&mut self, addr: String, val: Expr) -> io::Result<usize>{
+        self.stream.write(format!("(get {} {})", addr, val.to_string()).as_bytes())
+    }
+    
+    pub fn get(&mut self, addr: String) -> Expr {
+        self.stream.write(format!("(get {})", addr).as_bytes()).unwrap();
+        self.read_expr()
     }
 }

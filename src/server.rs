@@ -28,8 +28,8 @@ fn eval(e: &Expr, s: &mut TcpStream, db: &Arc<Database>) {
             let addr = x[1]
                 .atom()
                 .expect("Expected first argument to be atom")
-                .str()
-                .expect("Expected fisrt argument to be string");
+                .sym()
+                .expect("Expected fisrt argument to be sym");
             let res = pp::pp_atom(&db.get(addr));
             s.write(res.as_bytes()).unwrap();
         }
@@ -37,7 +37,7 @@ fn eval(e: &Expr, s: &mut TcpStream, db: &Arc<Database>) {
             let addr = x[1]
                 .atom()
                 .expect("Expected first argument to be atom")
-                .str()
+                .sym()
                 .expect("Expected fisrt argument to be string");
 
             let val = x[2].atom().expect("Expected second argument to be atom");
