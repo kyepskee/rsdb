@@ -16,9 +16,13 @@ fn handle_client(stream: &mut TcpStream, db: Arc<Database>) {
     // println!("here: \"{}\"", s);
     let mut rest = vec![];
     loop {
-        let e = read_expr(stream, &mut rest);
-        println!("{:?}", e);
-        eval(&e, stream, &db)
+        let oe  = read_expr(stream, &mut rest);
+        if let Some(e) = oe {
+            println!("{:?}", e);
+            eval(&e, stream, &db);
+        } else {
+            return;
+        }
     }
 }
 
@@ -30,20 +34,20 @@ fn eval(e: &Expr, s: &mut TcpStream, db: &Arc<Database>) {
                 .expect("Expected first argument to be atom")
                 .sym()
                 .expect("Expected fisrt argument to be sym");
-            let res = pp::pp_atom(&db.get(addr));
+            let res = pp::pp_expr(&db.get(addr));
             s.write(res.as_bytes()).unwrap();
-        }
-        if x[0] == Expr::Atom(Atom::Sym(String::from("get"))) {
+        } else if x[0] == Expr::Atom(Atom::Sym(String::from("set"))) {
             let addr = x[1]
                 .atom()
                 .expect("Expected first argument to be atom")
                 .sym()
                 .expect("Expected fisrt argument to be string");
 
-            let val = x[2].atom().expect("Expected second argument to be atom");
+            let val = x[2].clone();
             db.set(addr, val);
         }
     } else {
+        // FIXME: add some error returns on invalid requests
     }
 }
 

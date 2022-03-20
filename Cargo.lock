@@ -3,6 +3,16 @@
 version = 3
 
 [[package]]
+name = "_expr"
+version = "0.1.0"
+dependencies = [
+ "main",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "arrayvec"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -31,16 +41,6 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-
-[[package]]
-name = "expr"
-version = "0.1.0"
-dependencies = [
- "main",
- "proc-macro2",
- "quote",
- "syn",
-]
 
 [[package]]
 name = "funty"
@@ -118,7 +118,6 @@ checksum = "941ba9d78d8e2f7ce474c015eea4d9c6d25b6a3327f9832ee29a4de27f91bbb8"
 name = "rsdb"
 version = "0.1.0"
 dependencies = [
- "expr",
  "sexplib",
 ]
 
@@ -132,7 +131,7 @@ checksum = "71d301d4193d031abdd79ff7e3dd721168a9572ef3fe51a1517aba235bd8f86e"
 name = "sexplib"
 version = "0.1.0"
 dependencies = [
- "expr",
+ "_expr",
  "main",
  "nom",
  "proc-macro2",

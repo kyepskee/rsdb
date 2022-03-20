@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 
-use sexplib::{parser, sexp::Atom};
+use sexplib::{parser, sexp::Atom, sexp::Expr};
 
 use std::sync::Mutex;
 
 pub struct Database {
-    store: Mutex<HashMap<String, Atom>>,
+    store: Mutex<HashMap<String, Expr>>,
 }
 
 impl Database {
@@ -16,13 +16,17 @@ impl Database {
         }
     }
 
-    pub fn get(&self, s: String) -> Atom {
+    pub fn get(&self, s: String) -> Expr {
         println!("getting {}", s);
-        self.store.lock().unwrap()[&s].clone()
+        if let Some(x) = self.store.lock().unwrap().get(&s) {
+            x.clone()
+        } else {
+            Expr::List(box vec![])
+        }
     }
 
-    pub fn set(&self, s: String, x: Atom) {
-        println!("setting {} to {}", s, parser::pp::pp_atom(&x));
+    pub fn set(&self, s: String, x: Expr) {
+        println!("setting {} to {}", s, x.to_string());
         self.store.lock().unwrap().insert(s, x);
     }
 }

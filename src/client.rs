@@ -8,6 +8,7 @@ use std::net::{IpAddr, TcpListener, TcpStream};
 
 use crate::io::read_expr;
 
+#[derive(Debug)]
 pub struct Interface {
     port: u16,
     stream: TcpStream,
@@ -27,11 +28,12 @@ impl Interface {
     }
     
     fn read_expr(&mut self) -> Expr {
-        read_expr(&mut self.stream, &mut self.buf)
+        // FIXME: exits on closed connection for simplicity, fix this and add Result
+        read_expr(&mut self.stream, &mut self.buf).unwrap()
     }
     
-    pub fn set(&mut self, addr: String, val: Expr) -> io::Result<usize>{
-        self.stream.write(format!("(get {} {})", addr, val.to_string()).as_bytes())
+    pub fn set(&mut self, addr: String, val: Expr) -> io::Result<usize> {
+        self.stream.write(format!("(set {} {})", addr, val.to_string()).as_bytes())
     }
     
     pub fn get(&mut self, addr: String) -> Expr {

@@ -9,4 +9,3 @@ edition = "2018"
 [dependencies]
 # sexplib = { git = "https://github.com/kyepskee/sexplib" }
 sexplib = { path = "../sexplib" }
-expr = { path = "../sexplib/expr" }
